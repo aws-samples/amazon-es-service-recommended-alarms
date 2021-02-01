@@ -1,11 +1,39 @@
-## My Project
+# Amazon ES Recommended Alarms - Automatically create and configure recommended CloudWatch alarms for Amazon Elasticsearch Service
 
-TODO: Fill this README out!
+## Introduction
 
-Be sure to:
+The AmazonESRecommendedAlarm utility enables you to quickly create and manage CloudWatch metric alarms for your Amazon ES domain. Amazon ES domains send performance metrics to Amazon CloudWatch every minute. You can view the metrics and monitor the performance of your cluster in the Amazon Elasticsearch Service console. 
 
-* Change the title in this README
-* Edit your repository description on GitHub
+Hosting production grade Amazon ES cluster necessitates setting up alerts for critical metrics to send notification to operations team in case of any threshold breach. With Amazon CloudWatch, you can monitor your application workloads, create alarms, set thresholds for alarms. CloudWatch alarm uses Simple Notification Service (SNS) to send notification in near-real time of any metric exceeds a specified value for some amount of time. For example, you might want AWS to email you if your cluster health status is red for longer than one minute.  Amazon ES recommends critical metrics you must setup alarm to avoid interruption for production cluster. Following are recommended alarm for Amazon ES cluster. For more information, see [Recommended CloudWatch Alarms](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html).
+
+|Metric| Alarm|
+| :--- | :--- |
+| ClusterStatus.red | maximum is >= 1 for 1 minute, 1 consecutive time |
+| ClusterStatus.yellow | maximum is >= 1 for 1 minute, 1 consecutive time |
+| FreeStorageSpace | minimum is <= 20480 for 1 minute, 1 consecutive time |
+| ClusterIndexWritesBlocked | is >= 1 for 5 minutes, 1 consecutive time |
+| Nodes | minimum is < x for 1 day, 1 consecutive time |
+| AutomatedSnapshotFailure | maximum is >= 1 for 1 minute, 1 consecutive time |
+| CPUUtilization | maximum is >= 80% for 15 minutes, 3 consecutive times |
+| JVMMemoryPressure | maximum is >= 80% for 5 minutes, 3 consecutive times |
+| MasterCPUUtilization | maximum is >= 50% for 15 minutes, 3 consecutive times |
+| MasterJVMMemoryPressure | maximum is >= 80% for 15 minutes, 1 consecutive time |
+| KMSKeyError | is >= 1 for 1 minute, 1 consecutive time |
+| KMSKeyInaccessible | is >= 1 for 1 minute, 1 consecutive time |
+
+Following CloudFormation template lets you setup recommended alarms for your Amazon ES domain.  
+
+## Getting Started
+Following screenshot illustrates the parameters required to deploy the template. 
+|Parameter|	Description|
+| :--- | :--- |
+| Amazon ES domain name | 	Enter the domain name (do not enter the endpoint) | 
+| Total number of nodes | 	Enter the total No. of nodes in the cluster including data nodes, master nodes and UltraWarm nodes | 
+| Dedicated master nodes | 	If domain has dedicated master nodes then enter Y, else N | 
+| Encryption at rest | 	If domain has encryption enabled with Customer Master Key then enter Y, else N  | 
+| Topic Name |  	Enter the SNS topic name. CloudFormation will add the stack name as suffix of the topic | 
+| SNS Email	 | Enter the email address you want to get notification | 
+
 
 ## Security
 
