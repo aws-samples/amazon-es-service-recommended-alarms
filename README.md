@@ -37,7 +37,7 @@ Following screenshot illustrates the parameters required to deploy the template.
 
 ## Walkthrough
 1. Sign in to the console and choose the Region of Amazon ES cluster.
-2.Launch the stack specific to your region. 
+2. Launch the stack specific to your region. 
 
 | Region | CloudFormation |
 |--------|----------------|
@@ -54,11 +54,11 @@ If your region doesn't list above, use manually this template.
 ```text
 https://aes-siem-<REGION>.s3.amazonaws.com/siem-on-amazon-elasticsearch.template
 ```
-Following screenshot shows the parameters required to deploy this template.
 
-
+3. Enter your Amazon ES cluster details as shown in the following screenshot. 
 ![Sample parameters](./images/cloudformation-parameters.png)
 
+4. Choose Create stack.
 
 ## Security
 
