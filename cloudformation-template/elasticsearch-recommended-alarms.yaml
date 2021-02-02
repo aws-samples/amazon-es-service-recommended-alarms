@@ -1,0 +1,350 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS CloudFormation template for creating recommended alarms for Amazon Elasticsearch service https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html
+Parameters:
+  ESDomainName:
+    Default: "example-cluster"
+    Type: String
+    AllowedPattern: '[a-z][a-z0-9\\-]+'
+    ConstraintDescription: >-
+      Must be a valid AWS ES domain name prefix. The name must start with a
+      lowercase letter and must be between 3 and 28 characters. Valid characters
+      are a-z (lowercase only), 0-9, and - (hyphen).
+
+  SNSEmail:
+    Default: "operations-email@example.com"
+    Type: String
+
+  TopicName:
+    Default: "Amazon-ES-Recommended-Alarms"
+    Type: String 
+
+  NumofNode:
+    Default: "3"
+    Type: Number
+  ExistsMasterNode:
+    Default: 'Y'
+    Description: >-
+      Type Y if master node exists, else N
+    Type: String
+    MinLength: '1'
+    MaxLength: '1'
+    AllowedPattern: '[YN]'
+    ConstraintDescription: Permitted value is Y or N
+  ExistsEncryptionAtRest:
+    Default: 'Y'
+    Description: >-
+      Type Y if encryption at rest is enabled, else N
+    Type: String
+    MinLength: '1'
+    MaxLength: '1'
+    AllowedPattern: '[YN]'
+    ConstraintDescription: Permitted value is Y or N
+
+
+Metadata:
+    AWS::CloudFormation::Interface:
+        ParameterGroups:
+            - Label:
+                default: Amazon ES configuration
+              Parameters:
+                - ESDomainName
+                - NumofNode
+                - ExistsMasterNode
+                - ExistsEncryptionAtRest
+
+            - Label:
+                default: SNS Configuration
+              Parameters:
+                - TopicName
+                - SNSEmail
+
+        ParameterLabels: 
+          ESDomainName: 
+            default: "Enter Amazon ES domain name (ex: sample-es-cluster)"
+          ExistsMasterNode: 
+            default: "Does domain has dedicated master nodes?"
+          NumofNode: 
+            default: "Enter total number of nodes (including number of data nodes, master nodes and UltraWarm nodes)"
+          ExistsEncryptionAtRest: 
+            default: "Is encryption at rest is enabled with Customer Master Key?"
+          TopicName: 
+            default: "Enter SNS topic name"
+          SNSEmail: 
+            default: "Enter email address to receive notification"
+
+
+Conditions:
+  NoExistsMasterNode: !Equals
+    - !Ref ExistsMasterNode
+    - 'N'
+  YesExistsMasterNode: !Equals
+    - !Ref ExistsMasterNode
+    - 'Y'
+  NoExistsEncryptionAtRest: !Equals
+    - !Ref ExistsEncryptionAtRest
+    - 'N'
+  YesExistsEncryptionAtRest: !Equals
+    - !Ref ExistsEncryptionAtRest
+    - 'Y'
+
+Resources:
+  ESSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${TopicName}-${AWS::StackName}
+  SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref SNSEmail
+      Protocol: email
+      TopicArn: !Ref ESSNSTopic
+  CPUUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: CPU alarm for Elasticsearch cluster
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: CPUUtilization
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '90'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  JVMMemoryPressureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription:  JVM alerts Elasticsearch cluster
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: JVMMemoryPressure
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '300'
+      EvaluationPeriods: '3'
+      Threshold: '80'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+
+  RedClusterAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Red cluster status
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: ClusterStatus.red
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '1'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  YellowClusterAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Yellow cluster status
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: ClusterStatus.yellow
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '1'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  FreeStorageSpaceAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Minimum FreeStorageSpace alert
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: FreeStorageSpace
+      Namespace: AWS/ES
+      Statistic: Minimum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '20480'
+      ComparisonOperator: LessThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  ClusterIndexWritesBlockedAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: ClusterIndexWritesBlocked alerts
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: ClusterIndexWritesBlocked
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '1'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  AutomatedSnapshotFailureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: AutomatedSnapshotFailure alerts
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: AutomatedSnapshotFailure
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '1'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"  
+  NodesFailureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription:  Nodes failure alert
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: Nodes
+      Namespace: AWS/ES
+      Statistic: Minimum
+      Period: '3600'
+      EvaluationPeriods: '1'
+      Threshold: !Ref NumofNode
+      ComparisonOperator: LessThanThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  MasterCPUUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: YesExistsMasterNode
+    Properties:
+      AlarmDescription: CPU alarm for Elasticsearch cluster
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: MasterCPUUtilization
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '900'
+      EvaluationPeriods: '3'
+      Threshold: '50'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+  MasterJVMMemoryPressureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: YesExistsMasterNode
+    Properties:
+      AlarmDescription:  JVM alerts Elasticsearch cluster
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: MasterJVMMemoryPressure
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '900'
+      EvaluationPeriods: '1'
+      Threshold: '80'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+        
+  KMSKeyInaccessibleAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: YesExistsEncryptionAtRest
+    Properties:
+      AlarmDescription: KMSKeyInaccessible alerts
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: KMSKeyInaccessible
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '1'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
+
+  KMSKeyErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: YesExistsEncryptionAtRest
+    Properties:
+      AlarmDescription: KMSKeyError alerts
+      AlarmActions:
+      - Ref: ESSNSTopic
+      MetricName: KMSKeyError
+      Namespace: AWS/ES
+      Statistic: Maximum
+      Period: '60'
+      EvaluationPeriods: '1'
+      Threshold: '1'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      Dimensions:
+      - Name: DomainName
+        Value:
+          Ref: ESDomainName
+      - Name: ClientId
+        Value:
+          Ref: "AWS::AccountId"
