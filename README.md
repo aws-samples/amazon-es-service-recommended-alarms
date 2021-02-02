@@ -50,16 +50,28 @@ Following screenshot illustrates the parameters required to deploy the template.
       | Ireland(eu-west-1) |[![Deploy in eu-west-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-eu-west-1.s3-eu-west-1.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
       | Singapore(ap-southeast-1) |[![Deploy in ap-southeast-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-ap-southeast-1.s3-ap-southeast-1.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
 
-    If your region doesn't list above, use manually this template.
+    If your region doesn't list above, clone the repository and run below CLI to deploy the template 
+    
+    
 
-    ```text
-    https://aes-siem-<REGION>.s3.amazonaws.com/siem-on-amazon-elasticsearch.template
+    ```shell
+          aws cloudformation create-stack \
+            --stack-name recommended-amazon-es-alarms \
+            --template-body file:///elasticsearch-recommended-alarms.yaml \
+                  --region <REGION> \
+                  --capabilities {CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND} \
+                  --parameters '[
+                        {"ParameterKey":"NumofNode","ParameterValue":"3"}, 
+                        {"ParameterKey":"ExistsMasterNode","ParameterValue":"Y"},
+                        {"ParameterKey":"ExistsEncryptionAtRest","ParameterValue":"Y"},
+                        {"ParameterKey":"SNSEmail","ParameterValue":"operations-team@example.com"},
+                        {"ParameterKey":"TopicName","ParameterValue":"elasticsearch-recommended-alarms"}
+                        ]'
+    
     ```
 
 3. Enter your Amazon ES cluster details as shown in the following screenshot. 
 ![Sample parameters](./images/cloudformation-parameters.png)
-
-4. Choose Create stack.
 
 ## Security
 
