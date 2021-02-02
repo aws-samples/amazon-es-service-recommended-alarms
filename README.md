@@ -36,24 +36,25 @@ Following screenshot illustrates the parameters required to deploy the template.
 
 
 ## Walkthrough
-1. Sign in to the console and choose the Region of Amazon ES cluster.
-2. Launch the stack specific to your region. 
+1. Sign in to the console and choose the Region of Amazon ES cluster
 
-| Region | CloudFormation |
-|--------|----------------|
-| N. Virginia (us-east-1) |[![Deploy in us-east-1](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
-| Oregon (us-west-2) |[![Deploy in us-west-2](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
-| Tokyo (ap-northeast-1) |[![Deploy in ap-northeast-1](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
-| Frankfurt (eu-central-1) |[![Deploy in eu-central-1](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
-| London(eu-west-2) |[![Deploy in eu-west-2](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
-| Cape Town(af-south-1) |[![Deploy in af-south-1](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
-| Singapore(ap-southeast-1) |[![Deploy in ap-southeast-1](./docs/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+2. Launch the stack specific to your region
 
-If your region doesn't list above, use manually this template.
+      | Region | CloudFormation |
+      |--------|----------------|
+      | N. Virginia (us-east-1) |[![Deploy in us-east-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+      | Oregon (us-west-2) |[![Deploy in us-west-2](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+      | Tokyo (ap-northeast-1) |[![Deploy in ap-northeast-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+      | Frankfurt (eu-central-1) |[![Deploy in eu-central-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+      | London(eu-west-2) |[![Deploy in eu-west-2](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+      | Cape Town(af-south-1) |[![Deploy in af-south-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
+      | Singapore(ap-southeast-1) |[![Deploy in ap-southeast-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-us-east-1.s3.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
 
-```text
-https://aes-siem-<REGION>.s3.amazonaws.com/siem-on-amazon-elasticsearch.template
-```
+    If your region doesn't list above, use manually this template.
+
+    ```text
+    https://aes-siem-<REGION>.s3.amazonaws.com/siem-on-amazon-elasticsearch.template
+    ```
 
 3. Enter your Amazon ES cluster details as shown in the following screenshot. 
 ![Sample parameters](./images/cloudformation-parameters.png)
