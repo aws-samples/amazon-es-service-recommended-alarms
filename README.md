@@ -54,8 +54,9 @@ If your region doesn't list above, use manually this template.
 ```text
 https://aes-siem-<REGION>.s3.amazonaws.com/siem-on-amazon-elasticsearch.template
 ```
+Following screenshot shows the parameters required to deploy this template.
 
-https://github.com/aws-samples/amazon-es-service-recommended-alarms/blob/main/images/cloudformation-parameters.png
+(./images/cloudformation-parameters.png)
 
 
 ## Security
