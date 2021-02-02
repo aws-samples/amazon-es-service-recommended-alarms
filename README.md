@@ -56,7 +56,8 @@ https://aes-siem-<REGION>.s3.amazonaws.com/siem-on-amazon-elasticsearch.template
 ```
 Following screenshot shows the parameters required to deploy this template.
 
-(./images/cloudformation-parameters.png)
+
+![Sample parameters](./images/cloudformation-parameters.png)
 
 
 ## Security
