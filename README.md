@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The AmazonESRecommendedAlarm utility enables you to quickly create and manage CloudWatch metric alarms for your Amazon ES domain. Amazon ES domains send performance metrics to Amazon CloudWatch every minute. You can view the metrics and monitor the performance of your cluster in the Amazon Elasticsearch Service console. 
+The AmazonESRecommendedAlarm utility enables you to quickly create and manage [CloudWatch metric alarms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html) for your [Amazon ES](https://aws.amazon.com/elasticsearch-service/) domain. Amazon ES domains send performance metrics to Amazon CloudWatch every minute. You can view the metrics and monitor the performance of your cluster in the [Amazon Elasticsearch Service console](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-cloudwatchmetrics.html). 
 
 Hosting production grade Amazon ES cluster necessitates setting up alerts for critical metrics to send notification to operations team in case of any threshold breach. With Amazon CloudWatch, you can monitor your application workloads, create alarms, set thresholds for alarms.
 
-CloudWatch alarm uses Simple Notification Service (SNS) to send notification in near-real time of any metric exceeds a specified value for some amount of time. For example, you might want AWS to email you if your cluster health status is red for longer than one minute.  Amazon ES recommends critical metrics you must setup alarm to avoid interruption for production cluster. Following are recommended alarm for Amazon ES cluster. For more information, see [Recommended CloudWatch Alarms](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html).
+CloudWatch alarm uses [Amazon Simple Notification Service (SNS)](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-cloudwatchmetrics.html) to send notification in near-real time of any metric exceeds a specified value for some amount of time. For example, you might want AWS to email you if your cluster health status is red for longer than one minute.  Amazon ES recommends critical metrics you must setup alarm to avoid interruption for production cluster. Following are recommended alarm for Amazon ES cluster. For more information, see [Recommended CloudWatch Alarms](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html).
 
 |Metric| Alarm|
 | :--- | :--- |
@@ -50,13 +50,18 @@ Following screenshot illustrates the parameters required to deploy the template.
       | Ireland(eu-west-1) |[![Deploy in eu-west-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-eu-west-1.s3-eu-west-1.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
       | Singapore(ap-southeast-1) |[![Deploy in ap-southeast-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-ap-southeast-1.s3-ap-southeast-1.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
 
-    If your region doesn't list above, clone the repository and run below CLI to deploy the template 
+3. Enter your Amazon ES cluster details as shown in the following screenshot. 
+![Sample parameters](./images/cloudformation-parameters.png)
+
+4. Choose Create stack
+ 
+5. If your region doesn't list above, clone the repository and use below CLI to deploy the [template] (https://github.com/aws-samples/amazon-es-service-recommended-alarms/blob/main/cloudformation-template/elasticsearch-recommended-alarms.yaml)
     
     
 
     ```shell
           aws cloudformation create-stack \
-            --stack-name recommended-amazon-es-alarms \
+            --stack-name Amazon-ES-Recommended-Alarms \
             --template-body file:///elasticsearch-recommended-alarms.yaml \
                   --region <REGION> \
                   --capabilities {CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND} \
@@ -69,9 +74,10 @@ Following screenshot illustrates the parameters required to deploy the template.
                         ]'
     
     ```
+6. The CloudFormation stack will create email subscription to the topic. Amazon SNS will send a subscription confirmation message to the email address. [Confirm the subscription](https://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.confirm.html) to receive notifications from Amazon SNS
 
-3. Enter your Amazon ES cluster details as shown in the following screenshot. 
-![Sample parameters](./images/cloudformation-parameters.png)
+## Cleanup
+  Delete Amazon-ES-Recommended-Alarms stack in [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html)
 
 ## Security
 
