@@ -50,12 +50,13 @@ Following screenshot illustrates the parameters required to deploy the template.
       | Ireland(eu-west-1) |[![Deploy in eu-west-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-eu-west-1.s3-eu-west-1.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
       | Singapore(ap-southeast-1) |[![Deploy in ap-southeast-1](./images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create/review?stackName=Amazon-ES-Recommended-Alarms&templateURL=https://cf-templates-1djmokk063kxm-ap-southeast-1.s3-ap-southeast-1.amazonaws.com/elasticsearch-recommended-alarms.yaml) |
 
-3. Enter your Amazon ES cluster details as shown in the following screenshot. 
+3. Enter your Amazon ES cluster details as shown in the following screenshot
+
 ![Sample parameters](./images/cloudformation-parameters.png)
 
 4. Choose Create stack
  
-5. If your region doesn't list above, clone the repository and use below CLI to deploy the [template] (https://github.com/aws-samples/amazon-es-service-recommended-alarms/blob/main/cloudformation-template/elasticsearch-recommended-alarms.yaml)
+5. If your region doesn't list above, clone the repository and use below CLI to deploy the [template](https://github.com/aws-samples/amazon-es-service-recommended-alarms/blob/main/cloudformation-template/elasticsearch-recommended-alarms.yaml)
     
     
 
@@ -69,8 +70,8 @@ Following screenshot illustrates the parameters required to deploy the template.
                         {"ParameterKey":"NumofNode","ParameterValue":"3"}, 
                         {"ParameterKey":"ExistsMasterNode","ParameterValue":"Y"},
                         {"ParameterKey":"ExistsEncryptionAtRest","ParameterValue":"Y"},
-                        {"ParameterKey":"SNSEmail","ParameterValue":"operations-team@example.com"},
-                        {"ParameterKey":"TopicName","ParameterValue":"elasticsearch-recommended-alarms"}
+                        {"ParameterKey":"SNSEmail","ParameterValue":"operations-email@example.com"},
+                        {"ParameterKey":"TopicName","ParameterValue":"Amazon-ES-Recommended-Alarms"}
                         ]'
     
     ```
